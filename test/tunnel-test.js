@@ -12,6 +12,7 @@ var ssh_config = {
 	password: 'vagrant'
 };
 
-let tunnel = (new Tunnel()).createTunnel(ssh_config, 3307, 3306).then(function() {
+(async function () {
+	await (new Tunnel()).createTunnel(ssh_config, 3307, 3306);
 	console.log('probably success');
-});
+}());

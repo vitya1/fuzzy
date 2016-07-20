@@ -10,10 +10,8 @@ let tunnels_container = [];
 function Tunnel() {
 
 	this.createTunnel = function (ssh_config, local_port, host_port) {
-		return new Promise((resolve, reject) => {
-			/**
-			 * @todo collect servers in server container
-			 */
+		return new Promise(async (resolve, reject) => {
+			//@todo collect servers in server container
 			var server = net.createServer((conn) => {
 				//@todo install debug module
 				console.log('Create server');
@@ -41,6 +39,7 @@ function Tunnel() {
 
 			server.listen(local_port, LOCALHOST, (err) => {
 				console.log('server listening');
+				resolve();
 				//@todo need beautiful error handling
 				if(err) {
 					console.log(err);

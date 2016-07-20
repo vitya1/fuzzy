@@ -2,6 +2,12 @@ var mysql = require('mysql');
 
 //@todo extend DbClient?
 class MysqlClient {
+
+	createDbConnection(config) {
+		this.connection = mysql.createConnection(config);
+		return this;
+	}
+
 	useDatabase(db_name) {
 		//@todo query logging
 		let query_str = `USE ${db_name};`;
