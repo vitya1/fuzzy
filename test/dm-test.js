@@ -28,5 +28,7 @@ var mysql_config = {
 	console.log(c);
 	console.log(manager.get(c + '1111'));
 
+	manager.close(c);
+
 
 }());

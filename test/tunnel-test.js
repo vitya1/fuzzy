@@ -12,7 +12,10 @@ var ssh_config = {
 	password: 'vagrant'
 };
 
-(async function () {
-	await (new Tunnel()).createTunnel(ssh_config, 3307, 3306);
-	console.log('probably success');
-}());
+let tun = new Tunnel();
+
+setInterval(async () => {
+	await tun.createTunnel(ssh_config, 3307, 3306);
+	tun.close();
+	console.log(process.memoryUsage().heapUsed);
+}, 50);

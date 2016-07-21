@@ -1,11 +1,12 @@
+'use strict';
+
 import Tunnel from './tunnel'
 import MysqlClient from './mysql-client';
 
-var uuid = require('node-uuid');
+const uuid = require('node-uuid');
 
-'use strict';
 
-var DB_CLIENTS = {
+const DB_CLIENTS = {
 	MYSQL: 0,
 	SQL_LITE: 1
 };
@@ -18,8 +19,9 @@ var DM = function() {
 	};
 
 	this.connect = async function(db_config, ssh_config) {
+		let tunnel = null;
 		if(ssh_config != undefined) {
-			let tunnel = new Tunnel();
+			tunnel = new Tunnel();
 			await tunnel.createTunnel(ssh_config);
 		}
 		let client = this.getDbClient(db_config);
@@ -31,15 +33,25 @@ var DM = function() {
 		this.connections.set(connection_id, {
 			id: connection_id,
 			client: client,
-			tunnel: ssh_config,
+			tunnel: tunnel,
+			tunnel_config: ssh_config,
 			db_config: db_config
 		});
 
 		return connection_id;
 	};
 
-	this.disconnect = function(id) {
-		//@todo
+	this.close = function(id) {
+		let connection = this.connections.get(id);
+		if(!connection) {
+			console.log('nothing to close');
+			return false;
+		}
+		//@todo maybe these actions below are redundant
+		connection.client.end();
+		if(connection.tunnel) {
+			connection.tunnel.close();
+		}
 		return this.connections.delete(id);
 	};
 
@@ -48,7 +60,7 @@ var DM = function() {
 			throw new Error("Error parsing database config");
 		}
 
-		var client = null;
+		let client = null;
 		switch(db_config.type) {
 			case DB_CLIENTS.MYSQL:
 				let mysql = new MysqlClient();
@@ -74,4 +86,5 @@ var DM = function() {
 
 };
 
+export {DB_CLIENTS};
 export default DM;

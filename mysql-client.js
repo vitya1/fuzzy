@@ -8,6 +8,14 @@ class MysqlClient {
 		return this;
 	}
 
+	end() {
+		if(this.connection) {
+			this.connection.end(() => {
+				this.connection = null;
+			});
+		}
+	}
+
 	useDatabase(db_name) {
 		//@todo query logging
 		let query_str = `USE ${db_name};`;
