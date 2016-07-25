@@ -19,25 +19,19 @@ class MysqlClient {
 	useDatabase(db_name) {
 		//@todo query logging
 		let query_str = `USE ${db_name};`;
-
-		return new Promise(async (resolve, reject) => {
-			this.connection.query(query_str, function(err, data) {
-				if(err) {
-					console.log(err);
-					return reject(err);
-				}
-				console.log('Data received from Db:' + data);
-				resolve(data);
-			});
-		});
+		return this.execRawQuery(query_str);
 	}
 
 	showTables() {
-		//@todo query logging
 		let query_str = `SHOW TABLES;`;
+		return this.execRawQuery(query_str);
+	}
 
+	execRawQuery(query) {
+		//@todo query logging
+		//@todo add query checker
 		return new Promise(async (resolve, reject) => {
-			this.connection.query(query_str, function(err, data) {
+			this.connection.query(query, function(err, data) {
 				if(err) {
 					console.log(err);
 					return reject(err);

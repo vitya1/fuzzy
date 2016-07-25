@@ -18,17 +18,6 @@ var mysql_config = {
 };
 
 (async function () {
-	var manager = new DatabaseManager();
-	try {
-		var c = await manager.connect(mysql_config, ssh_config, [3307, 3306]);
-	}
-	catch(e) {
-		console.log('bad job');
-	}
-	console.log(c);
-}());
-
-(async function () {
 	let app = new AppServer();
 	let id = await app.connect(mysql_config, ssh_config, [3307, 3306]);
 	app.push(id, 'useDatabase', ['bingo']);
