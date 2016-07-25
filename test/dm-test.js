@@ -1,4 +1,5 @@
-import DM from '../database-manager';
+import DatabaseManager from '../database-manager';
+import AppServer from '../app-server';
 
 var ssh_config = {
 	//privateKey: require('fs').readFileSync('/here/is/my/key')
@@ -17,18 +18,19 @@ var mysql_config = {
 };
 
 (async function () {
-	var manager = new DM();
+	var manager = new DatabaseManager();
 	try {
-		var c = await manager.connect(mysql_config, ssh_config);
+		var c = await manager.connect(mysql_config, ssh_config, [3307, 3306]);
 	}
 	catch(e) {
 		console.log('bad job');
 	}
-
 	console.log(c);
-	console.log(manager.get(c + '1111'));
-
-	manager.close(c);
-
-
 }());
+
+(async function () {
+	let app = new AppServer();
+	let id = await app.connect(mysql_config, ssh_config, [3307, 3306]);
+	app.push(id, 'useDatabase', ['bingo']);
+	app.push(id, 'showTables');
+})();

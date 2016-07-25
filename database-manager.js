@@ -11,20 +11,23 @@ const DB_CLIENTS = {
 	SQL_LITE: 1
 };
 
-var DM = function() {
+var DatabaseManager = function() {
+	//todo move to app_server?
 	this.connections = new Map();
 
 	this.validateConfig = function() {
 		//@todo
 	};
 
-	this.connect = async function(db_config, ssh_config) {
+	//@todo now we have to set local port two times (to db_config and to port_config) - refactor
+	this.connect = async function(db_config, ssh_config, port_config) {
 		let tunnel = null;
-		if(ssh_config != undefined) {
+		if(!!ssh_config && !!port_config) {
+			console.log('Trying to create tunnel');
 			tunnel = new Tunnel();
-			await tunnel.createTunnel(ssh_config);
+			await tunnel.createTunnel(ssh_config, port_config[0], port_config[1]);
 		}
-		let client = this.getDbClient(db_config);
+		let client = this.createDbClient(db_config);
 		if(!client) {
 			throw new Error('Couldn\'t get client');
 		}
@@ -55,7 +58,7 @@ var DM = function() {
 		return this.connections.delete(id);
 	};
 
-	this.getDbClient = function(db_config) {
+	this.createDbClient = function(db_config) {
 		if(!db_config || db_config.type) {
 			throw new Error("Error parsing database config");
 		}
@@ -87,4 +90,4 @@ var DM = function() {
 };
 
 export {DB_CLIENTS};
-export default DM;
+export default DatabaseManager;

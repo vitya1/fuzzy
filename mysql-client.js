@@ -26,13 +26,25 @@ class MysqlClient {
 					console.log(err);
 					return reject(err);
 				}
+				console.log('Data received from Db:' + data);
 				resolve(data);
 			});
 		});
 	}
 
 	showTables() {
+		//@todo query logging
+		let query_str = `SHOW TABLES;`;
 
+		return new Promise(async (resolve, reject) => {
+			this.connection.query(query_str, function(err, data) {
+				if(err) {
+					console.log(err);
+					return reject(err);
+				}
+				resolve(data);
+			});
+		});
 	}
 
 }
