@@ -24,12 +24,24 @@ const Queue = function () {
 
 util.inherits(Queue, EventEmitter);
 
+const Logger = function() {
+	this.messages = [];
+
+	this.add = function(message) {
+		this.messages.push({
+			timestamp: Date.now(),
+			message: message
+		});
+	};
+};
+
 
 //while queue is not empty push new task to client
 
 //each db client has its own query queue
 const AppServer = function() {
 	this.db_manager = new DatabaseManager();
+	this.query_logger = new Logger();
 	this.queues = new Map();
 
 	this.connect = async function(db_conf, ssh_conf, port_config) {
@@ -79,6 +91,7 @@ const AppServer = function() {
 				console.log('Execute command', command);
 				//let params = (command.params).isArray() ? command.params : [command.params];
 				let result = await db_client[command.name].apply(db_client, command.params);
+				this.query_logger.add(db_client.last_query);
 				console.log(result);
 			}
 			else {
