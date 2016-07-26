@@ -28,10 +28,10 @@ class MysqlClient {
 	}
 
 	execRawQuery(query) {
-		//@todo query logging
+		this.last_query = query;
 		//@todo add query checker
 		return new Promise(async (resolve, reject) => {
-			this.connection.query(query, function(err, data) {
+			this.connection.query(this.last_query, (err, data) => {
 				if(err) {
 					console.log(err);
 					return reject(err);

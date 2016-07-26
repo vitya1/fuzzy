@@ -86,6 +86,10 @@ const AppServer = function() {
 			}
 		}
 	};
+
+	this.init = function() {
+		//register messages handlers
+	}
 };
 
 export default AppServer;

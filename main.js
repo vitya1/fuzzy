@@ -8,30 +8,8 @@ const Menu = electron.Menu;
 
 let mainWindow;
 
-var configProvider = function() {
-	const key_profile = 'profile';
-	this.sessions = {};
-
-	this.init = function() {
-		var self = this;
-		storage.get(key_profile, function(error, data) {
-			self.sessions = data;
-		});
-		return self;
-	};
-
-	this.saveProfile = function(data, callback) {
-		this.sessions = data;
-		callback = callback || function(){};
-		storage.set(key_profile, this.sessions, function() {
-			callback();
-		});
-	};
-};
-
 var Application = function() {
 	var main_window_template = `file://${__dirname}/index.html`;
-	this.config = (new configProvider()).init();
 
 	this.createMainMenu = function() {
 		const template = [
