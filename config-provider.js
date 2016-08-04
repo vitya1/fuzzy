@@ -55,6 +55,9 @@ const ConfigProvider = function(app_name) {
 			this.settings_full_path = JSON.parse(data);
 		});
 	};
+
+	this.saveSessions = function() {
+	};
 };
 
 (new ConfigProvider('myapp')).get();
