@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>sql client</title>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./sandstone.bootstrap.min.css">
+
+    <script src="bower_components/underscore/underscore.js"></script>
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/backbone/backbone-min.js"></script>
+</head>
+<body>
+
+
+<div class="row">
+    <div class="col-sm-9">
+        menu
+        <div class="row">
+            <div class="col-xs-4">
+                <ul class="list-group">
+                    <li class="list-group-item">users</li>
+                    <li class="list-group-item">profiles</li>
+                    <li class="list-group-item">companies</li>
+                </ul>
+            </div>
+            <div class="col-xs-8">
+                <table class="table">
+                    <tr><th>id</th><th>name</th><th>age</th><th>eye_colour</th></tr>
+                    <tr><td>1</td><td>Tim</td><td>21</td><td>gray</td></tr>
+                    <tr><td>2</td><td>John</td><td>36</td><td>green</td></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+<script>
+    require('./renderer-bundle.js')
+</script>
+</html>
