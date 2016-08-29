@@ -1,4 +1,4 @@
-import electron  from 'electron';
+const electron = require('electron');
 const storage  = require('electron-json-storage');
 
 const app = electron.app;

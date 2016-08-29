@@ -1,4 +1,4 @@
-var ipc = require('electron').ipcRenderer;
+var ipc = electron.ipcRenderer;
 
 var closeEl = document.querySelector('#open_session');
 closeEl.addEventListener('click', function () {
