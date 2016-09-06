@@ -3,12 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>sql client</title>
-    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./sandstone.bootstrap.min.css">
-
-    <script src="bower_components/underscore/underscore.js"></script>
-    <script src="bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="bower_components/backbone/backbone-min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
 <body>
 
@@ -38,6 +33,7 @@
 </body>
 
 <script>
-    require('./renderer-bundle.js')
+    const electron = require('electron');
+    require('./renderer-bundle.js');
 </script>
 </html>
