@@ -1,3 +1,4 @@
+require('./ui/main.js');
 var ipc = electron.ipcRenderer;
 
 var closeEl = document.querySelector('#open_session');
