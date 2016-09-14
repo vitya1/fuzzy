@@ -1,8 +1,11 @@
 const electron = require('electron');
 const storage  = require('electron-json-storage');
 
+const ConfigProvider = require('./config-provider.js');
+
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
+const ipc = electron.ipcMain;
 
 let mainWindow;
 
@@ -20,19 +23,25 @@ var Application = function() {
 	};
 
 	this.initHandlers = function() {
-		var ipc = electron.ipcMain;
-
 		ipc.on('close-main-window', function () {
 			app.quit();
 		});
-		ipc.on('open-session', function(e, data) {
-			//console.log(data);
+	};
+
+	this.sqlClientInit = function() {
+		let settings_filename = 'sessions.json';
+		let cp = new ConfigProvider('jsql', settings_filename);
+		ipc.on('get-connections', (event) => {
+			cp.get().then(function() {
+				event.sender.send('set-connections', cp.sessions);
+			});
 		});
 	};
 
 	this.init = function() {
 		var self = this;
 
+		self.sqlClientInit();
 		self.initHandlers();
 		app.on('ready', function() {
 			self.createMainWindow();

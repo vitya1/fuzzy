@@ -10,7 +10,6 @@
 
 	<script type="x/template" id="connection-form-template">
 		<form class="form-horizontal">
-			<p>{{title}}</p>
 			<fieldset>
 				<div class="form-group">
 					<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="session_network_type">Network Type</label>
@@ -35,51 +34,44 @@
 				<div class="form-group">
 					<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="session_user">User</label>
 					<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-						<input id="session_user" class="form-control input-sm" type="text" placeholder="">
+						<input id="session_user" class="form-control input-sm" type="text" :value="user">
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="session_password">Password</label>
 					<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-						<input id="session_password" class="form-control input-sm" type="password" placeholder="">
+						<input id="session_password" class="form-control input-sm" type="password" :value="password">
 					</div>
 				</div>
-				<div class="form-group">
-					<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="session_comment">Comment</label>
-					<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-						<textarea id="session_comment" class="form-control input-sm" rows="2"></textarea>
-					</div>
-				</div>
-
 
 				<div class="form-group">
 					<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="session_ssh_user">SSH Username</label>
 					<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-						<input id="session_ssh_user" class="form-control input-sm" type="text" placeholder="">
+						<input id="session_ssh_user" class="form-control input-sm" type="text" :value="ssh_user">
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="session_ssh_host">SSH  Host</label>
 					<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-						<input id="session_ssh_host" class="form-control input-sm" type="text" placeholder="">
+						<input id="session_ssh_host" class="form-control input-sm" type="text" :value="ssh_host">
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="session_ssh_port">SSH host port</label>
 					<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-						<input id="session_ssh_port" class="form-control input-sm" type="text" placeholder="">
+						<input id="session_ssh_port" class="form-control input-sm" type="text" :value="ssh_port">
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="session_ssh_password">SSH Password</label>
 					<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-						<input id="session_ssh_password" class="form-control input-sm" type="password" placeholder="">
+						<input id="session_ssh_password" class="form-control input-sm" type="password" :value="ssh_password">
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="session_ssh_port_local">SSH local port</label>
 					<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-						<input id="session_ssh_port_local" class="form-control input-sm" type="text" placeholder="">
+						<input id="session_ssh_port_local" class="form-control input-sm" type="text"  :value="ssh_port_local">
 					</div>
 				</div>
 			</fieldset>
@@ -117,8 +109,9 @@
 							</div>
 						</div>
 						<div class="modal-footer">
+							<!--@todo move buttons to connection-form component-->
 							<button class="btn btn-default btn-sm" data-dismiss="modal" type="button">Cancel</button>
-							<button class="btn btn-primary btn-sm" id="open_session" type="button">Open</button>
+							<button class="btn btn-primary btn-sm" v-on:click="saveAndConnect" type="button">Open</button>
 						</div>
 					</div>
 				</div>
