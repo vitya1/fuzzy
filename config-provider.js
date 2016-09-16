@@ -41,13 +41,21 @@ module.exports = function(app_name, settings_filename) {
 					reject(err);
 					console.log(err);
 				}
-				this.sessions = JSON.parse(data);
+				this.settings = JSON.parse(data);
 				resolve();
 			});
 		});
 	};
 
-	this.saveSessions = function() {
+	/**
+	 * Replace exist setting with data
+	 * @param data
+	 */
+	this.saveSetting = function(data) {
+		//for(let prop in this.settings) {
+		//
+		//}
+		//console.log(data);
 	};
 };
 

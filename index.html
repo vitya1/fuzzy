@@ -8,74 +8,100 @@
 	</head>
 	<body>
 
-	<script type="x/template" id="connection-form-template">
-		<form class="form-horizontal">
-			<fieldset>
-				<div class="form-group">
-					<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="session_network_type">Network Type</label>
-					<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-						<select id="session_network_type">
-							<option v-for="option in types" :value="option.value">{{option.text}}</option>
-						</select>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="session_host_ip">Hostname / IP</label>
-					<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-						<input id="session_host_ip" class="form-control input-sm" type="text" placeholder="127.0.0.1" :value="host">
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="session_port">Port</label>
-					<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-						<input id="session_port" class="form-control input-sm" type="text" :value="port">
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="session_user">User</label>
-					<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-						<input id="session_user" class="form-control input-sm" type="text" :value="user">
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="session_password">Password</label>
-					<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-						<input id="session_password" class="form-control input-sm" type="password" :value="password">
-					</div>
-				</div>
+	<script type="x/template" id="connections-list-template">
+			<div>
+				<a class="btn btn-danger disabled btn-xs" v-on:click="removeCon">Delete</a>
+				<a class="btn btn-success btn-xs" v-on:click="createNewCon">New</a>
+			</div>
+			<ul class="nav nav-pills nav-stacked">
+				<li v-for="item in items" v-on:click="chooseCon($index, $event)" v-bind:class="{active: $index == active_item}">
+					<a href="">{{item.title}}</a>
+				</li>
+			</ul>
+	</script>
 
-				<div class="form-group">
-					<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="session_ssh_user">SSH Username</label>
-					<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-						<input id="session_ssh_user" class="form-control input-sm" type="text" :value="ssh_user">
-					</div>
+	<script type="x/template" id="connection-form-template">
+		<div class="modal-body">
+			<div class="row">
+				<div id="" class="col-lg-3 col-md-3 col-sm-3 col-xs-3 well">
+					<connections-list></connections-list>
 				</div>
-				<div class="form-group">
-					<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="session_ssh_host">SSH  Host</label>
-					<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-						<input id="session_ssh_host" class="form-control input-sm" type="text" :value="ssh_host">
-					</div>
+				<div class="col-lg-9 col-md-9 col-sm-9 col-xs-9" >
+					<form class="form-horizontal">
+						<fieldset>
+							<div class="form-group">
+								<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="session_network_type">Network Type</label>
+								<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+									<select id="session_network_type" v-model="type">
+										<option v-for="option in type_options" :value="option.value">{{option.text}}</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="session_host_ip">Hostname / IP</label>
+								<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+									<input id="session_host_ip" class="form-control input-sm" type="text" placeholder="127.0.0.1" v-model="host" :value="host">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="session_port">Port</label>
+								<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+									<input id="session_port" class="form-control input-sm" type="text" v-model="port" :value="port">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="session_user">User</label>
+								<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+									<input id="session_user" class="form-control input-sm" type="text" v-model="user" :value="user">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="session_password">Password</label>
+								<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+									<input id="session_password" class="form-control input-sm" type="password" v-model="password" :value="password">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="session_ssh_user">SSH Username</label>
+								<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+									<input id="session_ssh_user" class="form-control input-sm" type="text" v-model="ssh_user" :value="ssh_user">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="session_ssh_host">SSH  Host</label>
+								<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+									<input id="session_ssh_host" class="form-control input-sm" type="text" v-model="ssh_host" :value="ssh_host">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="session_ssh_port">SSH host port</label>
+								<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+									<input id="session_ssh_port" class="form-control input-sm" type="text" v-model="ssh_port" :value="ssh_port">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="session_ssh_password">SSH Password</label>
+								<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+									<input id="session_ssh_password" class="form-control input-sm" type="password" v-model="ssh_password" :value="ssh_password">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="session_ssh_port_local">SSH local port</label>
+								<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+									<input id="session_ssh_port_local" class="form-control input-sm" type="text"  v-model="ssh_port_local" :value="ssh_port_local">
+								</div>
+							</div>
+						</fieldset>
+					</form>
 				</div>
-				<div class="form-group">
-					<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="session_ssh_port">SSH host port</label>
-					<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-						<input id="session_ssh_port" class="form-control input-sm" type="text" :value="ssh_port">
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="session_ssh_password">SSH Password</label>
-					<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-						<input id="session_ssh_password" class="form-control input-sm" type="password" :value="ssh_password">
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="session_ssh_port_local">SSH local port</label>
-					<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-						<input id="session_ssh_port_local" class="form-control input-sm" type="text"  :value="ssh_port_local">
-					</div>
-				</div>
-			</fieldset>
-		</form>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<!--@todo move buttons to connection-form component-->
+			<button class="btn btn-default btn-sm" data-dismiss="modal" type="button">Cancel</button>
+			<button class="btn btn-primary btn-sm" v-on:click="saveAndConnect" type="button">Open</button>
+		</div>
 	</script>
 
 		<!--<input id="test" name="test" type="text">
@@ -89,30 +115,7 @@
 							<button class="close" aria-hidden="true" data-dismiss="modal" type="button">×</button>
 							<h4 class="modal-title">Session manager</h4>
 						</div>
-						<div class="modal-body">
-							<div class="row">
-								<div id="connections-list" class="col-lg-3 col-md-3 col-sm-3 col-xs-3 well">
-									<div>
-										<a class="btn btn-danger disabled btn-xs" v-on:click="removeCon">Delete</a>
-										<a class="btn btn-success btn-xs" v-on:click="createNewCon">New</a>
-									</div>
-									<ul class="nav nav-pills nav-stacked">
-										<li v-for="item in items" v-on:click="chooseCon($index, $event)" v-bind:class="{active: $index == active_item}">
-											<a href="">{{item.title}}</a>
-										</li>
-									</ul>
-								</div>
-								<div class="col-lg-9 col-md-9 col-sm-9 col-xs-9" >
-									<connection-form>
-									</connection-form>
-								</div>
-							</div>
-						</div>
-						<div class="modal-footer">
-							<!--@todo move buttons to connection-form component-->
-							<button class="btn btn-default btn-sm" data-dismiss="modal" type="button">Cancel</button>
-							<button class="btn btn-primary btn-sm" v-on:click="saveAndConnect" type="button">Open</button>
-						</div>
+						<connection-form></connection-form>
 					</div>
 				</div>
 		</div>

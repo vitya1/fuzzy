@@ -33,8 +33,11 @@ var Application = function() {
 		let cp = new ConfigProvider('jsql', settings_filename);
 		ipc.on('get-connections', (event) => {
 			cp.get().then(function() {
-				event.sender.send('set-connections', cp.sessions);
+				event.sender.send('set-connections', cp.settings);
 			});
+		});
+		ipc.on('connect', (event, data) => {
+			cp.saveSetting(data);
 		});
 	};
 
