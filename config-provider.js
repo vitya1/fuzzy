@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const path_extra = require('path-extra');
+const node_uuid = require('node-uuid');
 
 module.exports = function(app_name, settings_filename) {
 	if(!app_name) {
@@ -18,14 +19,14 @@ module.exports = function(app_name, settings_filename) {
 	this.settings = {};
 
 	this.init = function() {
-		const default_settings = '{}';
+		const settings = '{}';
 		let config_dir = path_extra.datadir(this.app_name);
 		if (!fs.existsSync(config_dir)) {
 			fs.mkdirSync(config_dir);
 		}
 		if(!fs.existsSync(this.settings_full_path)) {
 			//@todo error handling
-			fs.writeFile(this.settings_full_path, default_settings, function(err) {
+			fs.writeFile(this.settings_full_path, settings, function(err) {
 				if(err) {
 					console.log(err);
 				}
@@ -47,15 +48,49 @@ module.exports = function(app_name, settings_filename) {
 		});
 	};
 
+	this.updateSetting = function(settings) {
+		//@todo file structure dynamic creation
+		let config_dir = path_extra.datadir(this.app_name);
+		if (!fs.existsSync(config_dir)) {
+			fs.mkdirSync(config_dir);
+		}
+		if(!fs.existsSync(this.settings_full_path)) {
+			//@todo error handling
+			fs.writeFile(this.settings_full_path, settings, function(err) {
+				if(err) {
+					console.log(err);
+				}
+			});
+		}
+		else {
+			fs.truncate(this.settings_full_path, 0, () => {
+				fs.writeFile(this.settings_full_path, JSON.stringify(settings), function(err) {
+					if (err) {
+						console.log(err);
+					}
+				});
+			});
+		}
+	};
+
 	/**
 	 * Replace exist setting with data
 	 * @param data
 	 */
 	this.saveSetting = function(data) {
-		//for(let prop in this.settings) {
-		//
-		//}
-		//console.log(data);
+		if(!data.id) {
+			data.id = node_uuid.v1();
+			this.settings.push(data);
+			this.updateSetting(this.settings);
+		}
+		else {
+			this.settings.forEach((item, index) => {
+				if(item.hasOwnProperty('id') && item.id == data.id) {
+					this.settings[index] = data;
+					this.updateSetting(this.settings);
+				}
+			});
+		}
 	};
 };
 

@@ -10,7 +10,7 @@
 
 	<script type="x/template" id="connections-list-template">
 			<div>
-				<a class="btn btn-danger disabled btn-xs" v-on:click="removeCon">Delete</a>
+				<!--<a class="btn btn-danger disabled btn-xs" v-on:click="removeCon">Delete</a>-->
 				<a class="btn btn-success btn-xs" v-on:click="createNewCon">New</a>
 			</div>
 			<ul class="nav nav-pills nav-stacked">
@@ -29,6 +29,13 @@
 				<div class="col-lg-9 col-md-9 col-sm-9 col-xs-9" >
 					<form class="form-horizontal">
 						<fieldset>
+							<div class="form-group">
+								<!--@todo bind menu item-->
+								<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="session_host_ip">Title</label>
+								<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+									<input id="title" class="form-control input-sm" type="text" v-model="title" :value="title">
+								</div>
+							</div>
 							<div class="form-group">
 								<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="session_network_type">Network Type</label>
 								<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
