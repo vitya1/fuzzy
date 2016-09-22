@@ -36,6 +36,11 @@ var Application = function() {
 				event.sender.send('set-connections', cp.settings);
 			});
 		});
+		ipc.on('delete-connection', (event, id) => {
+			if(id != null) {
+				cp.deleteRowById(id);
+			}
+		});
 		ipc.on('connect', (event, data) => {
 			cp.saveSetting(data);
 		});

@@ -92,5 +92,17 @@ module.exports = function(app_name, settings_filename) {
 			});
 		}
 	};
+
+	/**
+	 * @param id
+	 */
+	this.deleteRowById = function(id) {
+		this.settings.forEach((item, index) => {
+			if(item.hasOwnProperty('id') && item.id == id) {
+				this.settings.splice(index, 1);
+				this.updateSetting(this.settings);
+			}
+		});
+	}
 };
 

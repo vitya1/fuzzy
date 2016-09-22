@@ -83,7 +83,18 @@ let connectionForm = {
 					this.chooseCon(this.items.length - 1);
 				},
 				removeCon: function () {
+					if(this.items[this.active_item] == undefined) {
+						return;
+					}
+					ipc.send('delete-connection', this.items[this.active_item].id);
 					this.items.splice(this.active_item, 1);
+					if(this.items.length == 0) {
+						this.createNewCon();
+					}
+					else {
+						let item_id = this.items[this.active_item] != undefined ? this.active_item : this.active_item - 1;
+						this.chooseCon(item_id);
+					}
 				},
 				chooseCon: function (index, event) {
 					event && event.preventDefault();
