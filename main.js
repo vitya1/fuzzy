@@ -1,7 +1,7 @@
 const electron = require('electron');
 const storage  = require('electron-json-storage');
 
-const ConfigProvider = require('./config-provider.js');
+const ConfigProvider = require('./core/config-provider.js');
 
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
