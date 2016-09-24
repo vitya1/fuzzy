@@ -44,6 +44,9 @@ var Application = function() {
 		ipc.on('connect', (event, data) => {
 			cp.saveSetting(data);
 		});
+		ipc.on('get_tables', () => {
+
+		});
 	};
 
 	this.init = function() {

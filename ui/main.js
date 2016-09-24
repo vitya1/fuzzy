@@ -1,25 +1,23 @@
-//var Vue = require('vue');
 import Vue from 'vue';
-import ConnectionWindow from './components/connection-window.vue';
 import Router from 'vue-router';
+import ConnectionWindow from './components/connection-window.vue';
+import Main from './components/main.vue';
 
-/*
-
-let app = new Vue({
-	el: '#app',
-	components: {
-		'connection-form': connectionForm
-	}
-});
-*/
-
-Vue.config.debug = true;
 Vue.use(Router);
 
-var router = new Router();
-router.map({
-	'/connection': {
-		component: {}
+let app = Vue.extend({
+	el: function () {
+		return '#app'
 	}
 });
-router.start(ConnectionWindow, '#app');
+
+const router = new Router();
+
+router.map({
+	'/main': {component: Main},
+	'/connection': {component: ConnectionWindow}
+});
+
+router.start(app, '#app');
+
+router.redirect({'*': 'bar'});

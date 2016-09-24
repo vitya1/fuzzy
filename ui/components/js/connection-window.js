@@ -1,8 +1,4 @@
-import Vue from 'vue';
 const ipc = electron.ipcRenderer;
-
-//@todo remove
-const Events = new Vue({});
 
 export default {
 	name: 'connectionForm',
@@ -12,9 +8,6 @@ export default {
 			this.chooseCon(0);
 		});
 		ipc.send('get-connections');
-		Events.$on('fillProperty', (data) => {
-			this.fillProperty(data);
-		});
 	},
 	data: () => {
 		return {
@@ -40,15 +33,11 @@ export default {
 			type: 'Number',
 			default: 3306
 		},
-		title: {type: 'String', default: ''},
-		host: {type: 'String', default: ''},
-		user: {type: 'String', default: ''},
-		password: {type: 'String', default: ''},
+		title: {type: 'String', default: ''}, host: {type: 'String', default: ''},
+		user: {type: 'String', default: ''}, password: {type: 'String', default: ''},
 		ssh_host: {type: 'String', default: ''},
-		ssh_user: {type: 'String', default: ''},
-		ssh_password: {type: 'String', default: ''},
-		ssh_port: {type: 'String', default: ''},
-		ssh_port_local: {type: 'String', default: ''},
+		ssh_user: {type: 'String', default: ''}, ssh_password: {type: 'String', default: ''},
+		ssh_port: {type: 'String', default: ''}, ssh_port_local: {type: 'String', default: ''}
 	},
 	methods: {
 		fillProperty: function(conObj) {
@@ -65,9 +54,10 @@ export default {
 				data[property] = this[property];
 			}
 			ipc.send('connect', data);
+			this.$route.router.go('main');
 		},
 		createNewCon: function () {
-			this.items.push({title: (new Date()).getSeconds()});
+			this.items.push({title: 'New connection'});
 			this.chooseCon(this.items.length - 1);
 		},
 		removeCon: function () {
@@ -87,7 +77,7 @@ export default {
 		chooseCon: function (index, event) {
 			event && event.preventDefault();
 			this.active_item = index;
-			Events.$emit('fillProperty', this.items[index]);
+			this.fillProperty(this.items[index]);
 		},
 	}
 }
