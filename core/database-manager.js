@@ -68,6 +68,7 @@ var DatabaseManager = function() {
 			case DB_CLIENTS.MYSQL:
 				let mysql = new MysqlClient();
 				client = mysql.createDbConnection(db_config);
+				console.log('Im Mysql Look at me!');
 				break;
 			case DB_CLIENTS.SQL_LITE:
 				client = {name: 'I am mr sqlite connection. Look at me.'};

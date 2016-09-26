@@ -4,7 +4,7 @@ var path = require('path');
 module.exports = {
 	entry: './renderer.js',
 	output: {
-		filename: 'renderer-bundle.js'
+		filename: 'renderer-build.js'
 	},
 	devtool: 'source-map',
 	module: {
@@ -25,4 +25,3 @@ module.exports = {
 		plugins: ['transform-runtime']
 	}
 };
-//

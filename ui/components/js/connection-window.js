@@ -7,6 +7,9 @@ export default {
 			this.items = data;
 			this.chooseCon(0);
 		});
+		ipc.on('init-connection', (event, data) => {
+			this.$route.router.go('/main/' + data);
+		});
 		ipc.send('get-connections');
 	},
 	data: () => {
@@ -24,8 +27,9 @@ export default {
 		type_options: {
 			default: () => {
 				return [
-					{value: 10, text: 'mysql'},
-					{value: 20, text: 'sqlite'}
+					//@todo map or take variables from 'server'
+					{value: 0, text: 'mysql'},
+					{value: 1, text: 'sqlite'}
 				]
 			}
 		},
@@ -54,7 +58,6 @@ export default {
 				data[property] = this[property];
 			}
 			ipc.send('connect', data);
-			this.$route.router.go('main');
 		},
 		createNewCon: function () {
 			this.items.push({title: 'New connection'});

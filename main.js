@@ -1,7 +1,11 @@
+require("babel-core/register");
+require("babel-polyfill");//todo remove
+
 const electron = require('electron');
 const storage  = require('electron-json-storage');
 
-const ConfigProvider = require('./core/config-provider.js');
+import ConfigProvider from './build/config-provider.js';
+import AppServer from './build/app-server';
 
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
@@ -11,6 +15,9 @@ let mainWindow;
 
 var Application = function() {
 	var main_window_template = `file://${__dirname}/index.html`;
+
+	this.connection_id = null;
+	this.app_server = null;
 
 	this.createMainWindow = function() {
 		mainWindow = new BrowserWindow({width: 800, height: 600});
@@ -28,7 +35,7 @@ var Application = function() {
 		});
 	};
 
-	this.sqlClientInit = function() {
+	this.sqlClientInit = async function() {
 		let settings_filename = 'sessions.json';
 		let cp = new ConfigProvider('jsql', settings_filename);
 		ipc.on('get-connections', (event) => {
@@ -41,11 +48,26 @@ var Application = function() {
 				cp.deleteRowById(id);
 			}
 		});
-		ipc.on('connect', (event, data) => {
+		ipc.on('connect', async (event, data) => {
 			cp.saveSetting(data);
+			this.app_server = new AppServer();
+			let ssh_config = {};
+			let mysql_config = {};
+			for(let i in data) {
+				if(i.indexOf('ssh_') === 0) {
+					ssh_config[i.replace('ssh_', '')] = data[i];
+				}
+				else {
+					mysql_config[i] = data[i];
+				}
+			}
+			this.connection_id = await this.app_server.connect(mysql_config, ssh_config, [3307, 3306]);
+			event.sender.send('init-connection', this.connection_id);
 		});
-		ipc.on('get_tables', () => {
 
+		ipc.on('show-tables', () => {
+			//this.app_server.push(this.connection_id, 'useDatabase', ['test_database']);
+			//this.app_server.push(this.connection_id, 'showTables');
 		});
 	};
 

@@ -14,10 +14,10 @@ let app = Vue.extend({
 const router = new Router();
 
 router.map({
-	'/main': {component: Main},
+	'/main/:id': {component: Main},
 	'/connection': {component: ConnectionWindow}
 });
 
 router.start(app, '#app');
 
-router.redirect({'*': 'bar'});
+router.redirect({'*': 'connection'});
