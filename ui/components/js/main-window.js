@@ -1,7 +1,13 @@
 const ipc = electron.ipcRenderer;
 export default {
 	name: 'Main',
+	data: () => {
+		return {
+			id: null
+		}
+	},
 	ready: function() {
-		console.log('hi main');
+		this.id = this.$route.params.id;
+
 	}
 };
