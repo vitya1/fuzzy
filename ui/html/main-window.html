@@ -4,9 +4,9 @@
         <div class="row">
             <div class="col-xs-4">
                 <ul class="list-group">
-                    <li class="list-group-item">users</li>
-                    <li class="list-group-item">profiles</li>
-                    <li class="list-group-item">companies</li>
+                    <li v-for="item in databases" v-on:click="useDb($index, $event)" class="list-group-item">
+                        <a href="">{{item.Database}}</a>
+                    </li>
                 </ul>
             </div>
             <div class="col-xs-8">

@@ -2,9 +2,11 @@
 var path = require('path');
 
 module.exports = {
-	entry: './renderer.js',
+	entry: {
+		renderer: './renderer.js',
+	},
 	output: {
-		filename: 'renderer-build.js'
+		filename: path.join(__dirname, '[name]-build.js')
 	},
 	devtool: 'source-map',
 	module: {

@@ -16,6 +16,7 @@ let mainWindow;
 var Application = function() {
 	var main_window_template = `file://${__dirname}/index.html`;
 
+	//@todo don't contain connection ids here
 	this.connection_id = null;
 	this.app_server = null;
 
@@ -48,12 +49,16 @@ var Application = function() {
 				cp.deleteRowById(id);
 			}
 		});
-		ipc.on('connect', async (event, data) => {
+		 ipc.on('connect', async (event, data) => {
 			cp.saveSetting(data);
 			this.app_server = new AppServer();
-			let ssh_config = {};
-			let mysql_config = {};
+			var ssh_config = {};
+			var mysql_config = {};
+			let redundant_params = ['id', 'title', 'ssh_port_local', 'ssh_port'];
 			for(let i in data) {
+				if(redundant_params.indexOf(i) != -1) {
+					continue;
+				}
 				if(i.indexOf('ssh_') === 0) {
 					ssh_config[i.replace('ssh_', '')] = data[i];
 				}
@@ -61,6 +66,9 @@ var Application = function() {
 					mysql_config[i] = data[i];
 				}
 			}
+			//@todo cut something shit fom the configs
+			//@todo pooooooorts!!
+			//@todo error handling (for ex. empty ssh_username = FATAL)
 			this.connection_id = await this.app_server.connect(mysql_config, ssh_config, [3307, 3306]);
 			event.sender.send('init-connection', this.connection_id);
 		});
@@ -68,6 +76,13 @@ var Application = function() {
 		ipc.on('show-tables', () => {
 			//this.app_server.push(this.connection_id, 'useDatabase', ['test_database']);
 			//this.app_server.push(this.connection_id, 'showTables');
+		});
+
+		ipc.on('show-databases', async (event, data) => {
+			this.app_server.push(data, 'showDatabases', (res) => {
+				event.sender.send('set-databases', res);
+				console.log('SUCCESS HANDLING!');
+			});
 		});
 	};
 

@@ -57,14 +57,32 @@ const AppServer = function() {
 		return this.db_manager.close(connection_id);
 	};
 
-	this.push = function(connection_id, command, params) {
-		console.log('command pushed ' + command);
+	/**
+	 * Pushes a command to the command queue
+	 * @param connection_id
+	 * @param command
+	 * @param params
+	 * @param callback
+	 */
+	this.push = function(connection_id, command, params, callback) {
 		console.log(this.queues.has(connection_id));
-		this.queues.get(connection_id).push({
+		var cmd = {
 			id: connection_id,
-			name: command,
-			params: params
-		});
+			name: command
+		};
+		console.log();
+		if(params != undefined && Array.isArray(params)) {
+			cmd.params = params;
+		}
+		console.log(arguments);
+		let handler = this.getHandlerArgument(arguments);
+		console.log('Handler: ' + handler);
+		if(handler != null) {
+			cmd.callback = handler;
+		}
+		console.log('Command pushed: ');
+		console.log(cmd);
+		this.queues.get(connection_id).push(cmd);
 	};
 
 	this.initQueue = function(connection_id) {
@@ -87,17 +105,36 @@ const AppServer = function() {
 		console.log('Queue emptiness: ' + queue.isEmpty());
 		while(!queue.isEmpty()) {
 			let command = queue.shift();
+			console.log('Command: ');
+			console.log(command);
 			if(db_client[command.name] && typeof db_client[command.name] === 'function') {
 				console.log('Execute command', command);
-				//let params = (command.params).isArray() ? command.params : [command.params];
 				let result = await db_client[command.name].apply(db_client, command.params);
 				this.query_logger.add(db_client.last_query);
+				console.log('CALLBACK: ');
 				console.log(result);
+				if(command.hasOwnProperty('callback')) {
+					command.callback(result);
+				}
 			}
 			else {
 				console.log('Command ' + command.name + ' is not a function or doesnt exist');
 			}
 		}
+
+	};
+
+	/**
+	 * Returns callback if the last arg is function or null if not
+	 * @param args
+	 * @returns {Function|null}
+	 */
+	this.getHandlerArgument = function (args) {
+		if(args == undefined || !(typeof args === 'object')) {
+			return null;
+		}
+		let handler = args[Object.keys(args).length - 1];
+		return (typeof handler === 'function') ? handler : null;
 	};
 };
 

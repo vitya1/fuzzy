@@ -16,7 +16,7 @@ export default {
 		return {
 			//properties that will be send to core
 			t_props: ['type', 'port', 'title', 'host', 'user', 'password', 'ssh_host',
-				'ssh_user', 'ssh_password', 'ssh_port', 'ssh_port_local', 'id'],
+				'ssh_username', 'ssh_password', 'ssh_port', 'ssh_port_local', 'id'],
 			items: [],
 			active_item: 0
 		}
@@ -40,7 +40,7 @@ export default {
 		title: {type: 'String', default: ''}, host: {type: 'String', default: ''},
 		user: {type: 'String', default: ''}, password: {type: 'String', default: ''},
 		ssh_host: {type: 'String', default: ''},
-		ssh_user: {type: 'String', default: ''}, ssh_password: {type: 'String', default: ''},
+		ssh_username: {type: 'String', default: ''}, ssh_password: {type: 'String', default: ''},
 		ssh_port: {type: 'String', default: ''}, ssh_port_local: {type: 'String', default: ''}
 	},
 	methods: {
