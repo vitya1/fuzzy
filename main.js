@@ -49,11 +49,12 @@ var Application = function() {
 				cp.deleteRowById(id);
 			}
 		});
-		 ipc.on('connect', async (event, data) => {
+		ipc.on('connect', async (event, data) => {
 			cp.saveSetting(data);
 			this.app_server = new AppServer();
 			var ssh_config = {};
 			var mysql_config = {};
+			//@todo refactor this. Looks pretty awful
 			let redundant_params = ['id', 'title', 'ssh_port_local', 'ssh_port'];
 			for(let i in data) {
 				if(redundant_params.indexOf(i) != -1) {
