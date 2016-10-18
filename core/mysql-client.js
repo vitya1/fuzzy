@@ -2,6 +2,8 @@ var mysql = require('mysql');
 
 //@todo extend DbClient?
 class MysqlClient {
+	//@todo make current database variable. It should check database on client and "current db" at each query
+	//this.current_database = null;
 
 	createDbConnection(config) {
 		this.config = config;
@@ -32,18 +34,34 @@ class MysqlClient {
 
 	showTables() {
 		let query_str = `SHOW TABLES;`;
-		return this.execRawQuery(query_str);
+		return this.execRawQuery(query_str, this.extractValues);
 	}
 
 	showDatabases() {
 		let query_str = `SHOW DATABASES;`;
-		return this.execRawQuery(query_str, function(data) {
-			let res = [];
-			for(var item in data) {
-				res.push(data[item].Database);
+		return this.execRawQuery(query_str, this.extractValues);
+	}
+
+	/**
+	 * Extract values array from the query result array
+	 * @param data
+	 * @returns {Array}
+	 */
+	extractValues(data) {
+		let res = [];
+		for(let item in data) {
+			if(!data.hasOwnProperty(item)) {
+				continue;
 			}
-			return res;
-		});
+			for(let key in data[item]) {
+				if(!data[item].hasOwnProperty(key)) {
+					continue;
+				}
+				res.push(data[item][key]);
+				break;
+			}
+		}
+		return res;
 	}
 
 	/**

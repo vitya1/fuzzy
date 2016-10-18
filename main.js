@@ -67,22 +67,22 @@ var Application = function() {
 					mysql_config[i] = data[i];
 				}
 			}
-			//@todo cut something shit fom the configs
 			//@todo pooooooorts!!
 			//@todo error handling (for ex. empty ssh_username = FATAL)
 			this.connection_id = await this.app_server.connect(mysql_config, ssh_config, [3307, 3306]);
 			event.sender.send('init-connection', this.connection_id);
 		});
 
-		ipc.on('show-tables', () => {
-			//this.app_server.push(this.connection_id, 'useDatabase', ['test_database']);
-			//this.app_server.push(this.connection_id, 'showTables');
+		ipc.on('show-tables', async (event, connection, params) => {
+			this.app_server.push(this.connection_id, 'useDatabase', params);
+			this.app_server.push(this.connection_id, 'showTables', (res) => {
+				event.sender.send('set-tables', res, params);
+			});
 		});
 
-		ipc.on('show-databases', async (event, data) => {
-			this.app_server.push(data, 'showDatabases', (res) => {
+		ipc.on('show-databases', async (event, connection) => {
+			this.app_server.push(connection, 'showDatabases', (res) => {
 				event.sender.send('set-databases', res);
-				console.log('SUCCESS HANDLING!');
 			});
 		});
 	};

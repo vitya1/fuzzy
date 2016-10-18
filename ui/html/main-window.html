@@ -4,8 +4,11 @@
         <div class="row">
             <div class="col-xs-4">
                 <ul class="list-group">
-                    <li v-for="item in databases" v-on:click="useDb($index, $event)" class="list-group-item">
-                        <a href="">{{item.Database}}</a>
+                    <li v-for="db_item in databases" class="list-group-item">
+                        <a v-on:click="useDb(db_item.name, $event)" v-bind:class="[{active: db_item.name == active_db}, 'btn btn-xs']">{{db_item.name}}</a>
+                        <ul class="list-group">
+                            <li v-for="table_item in db_item.tables">{{table_item}}</li>
+                        </ul>
                     </li>
                 </ul>
             </div>
