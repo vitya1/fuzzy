@@ -5,18 +5,30 @@
             <div class="col-xs-4">
                 <ul class="list-group">
                     <li v-for="db_item in databases" class="list-group-item">
-                        <a v-on:click="useDb(db_item.name, $event)" v-bind:class="[{active: db_item.name == active_db}, 'btn btn-xs']">{{db_item.name}}</a>
+                        <a v-on:click="chooseDb(db_item.name, $event)"
+                           v-bind:class="[{active: db_item.name == active_db}, 'btn btn-xs']">
+                            {{db_item.name}}
+                        </a>
                         <ul class="list-group">
-                            <li v-for="table_item in db_item.tables">{{table_item}}</li>
+                            <li v-for="table_item in db_item.tables"
+                                v-on:click="chooseTable(table_item, $event)"
+                                v-bind:class="{active: table_item == active_table.name}">
+                                {{table_item}}
+                            </li>
                         </ul>
                     </li>
                 </ul>
             </div>
             <div class="col-xs-8">
-                <table class="table">
-                    <tr><th>id</th><th>name</th><th>age</th><th>eye_colour</th></tr>
-                    <tr><td>1</td><td>Tim</td><td>21</td><td>gray</td></tr>
-                    <tr><td>2</td><td>John</td><td>36</td><td>green</td></tr>
+                <table class="table" v-if="active_table.name != null">
+                    <tr>
+                        <th v-for="column in active_table.structure">
+                        {{column.Field}}
+                        </th>
+                    </tr>
+                    <tr v-for="row in active_table.data">
+                        <td v-for="column in active_table.structure">{{row[column.Field]}}</td>
+                    </tr>
                 </table>
             </div>
         </div>

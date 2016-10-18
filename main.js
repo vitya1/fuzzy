@@ -80,6 +80,17 @@ var Application = function() {
 			});
 		});
 
+		ipc.on('choose-table', async (event, connection, params) => {
+			this.app_server.push(this.connection_id, 'describeTable', params, (tableParams) => {
+				let columns = tableParams.map(function(a) {
+					return a.Field;
+				}).join (', ');
+				this.app_server.push(this.connection_id, 'selectTable', [params, columns], (tableData) => {
+					event.sender.send('set-table', {structure: tableParams, data: tableData}, params);
+				});
+			});
+		});
+
 		ipc.on('show-databases', async (event, connection) => {
 			this.app_server.push(connection, 'showDatabases', (res) => {
 				event.sender.send('set-databases', res);

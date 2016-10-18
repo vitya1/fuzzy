@@ -4,6 +4,11 @@ export default {
 		return {
 			id: null,
 			active_db: null,
+			active_table: {
+				name: null,
+				structure: [],
+				data: []
+			},
 			databases: []
 		}
 	},
@@ -27,11 +32,20 @@ export default {
 				}
 			}
 		});
+		ipc.on('set-table', (event, data, db_name) => {
+			console.log(data);
+			this.active_table.data = data.data;
+			this.active_table.structure = data.structure;
+		});
 	},
 	methods: {
-		useDb: function(index, event) {
+		chooseDb: function(index, event) {
 			this.active_db = index;
 			ipc.send('show-tables', this.id, [index]);
+		},
+		chooseTable: function(index, event) {
+			this.active_table.name = index;
+			ipc.send('choose-table', this.id, [index]);
 		}
 	}
 };

@@ -42,6 +42,17 @@ class MysqlClient {
 		return this.execRawQuery(query_str, this.extractValues);
 	}
 
+	selectTable(table, columns) {
+		let query_str = `SELECT ${columns} FROM ${table} LIMIT 500;`;
+		console.log(query_str);
+		return this.execRawQuery(query_str);
+	}
+
+	describeTable(table) {
+		let query_str = `DESCRIBE ${table};`;
+		return this.execRawQuery(query_str);
+	}
+
 	/**
 	 * Extract values array from the query result array
 	 * @param data

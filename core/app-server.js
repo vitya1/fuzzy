@@ -47,7 +47,7 @@ const AppServer = function() {
 	this.connect = async function(db_conf, ssh_conf, port_config) {
 		let connection_id = await this.db_manager.connect(db_conf, ssh_conf, port_config);
 		this.initQueue(connection_id);
-		console.log('Connection id ' + connection_id);
+		//console.log('Connection id ' + connection_id);
 		return connection_id;
 	};
 
@@ -65,33 +65,32 @@ const AppServer = function() {
 	 * @param callback
 	 */
 	this.push = function(connection_id, command, params, callback) {
-		console.log(this.queues.has(connection_id));
+		//console.log(this.queues.has(connection_id));
 		var cmd = {
 			id: connection_id,
 			name: command
 		};
-		console.log();
 		if(params != undefined && Array.isArray(params)) {
 			cmd.params = params;
 		}
-		console.log(arguments);
+		//console.log(arguments);
 		let handler = this.getHandlerArgument(arguments);
-		console.log('Handler: ' + handler);
+		//console.log('Handler: ' + handler);
 		if(handler != null) {
 			cmd.callback = handler;
 		}
-		console.log('Command pushed: ');
-		console.log(cmd);
+		//console.log('Command pushed: ');
+		//console.log(cmd);
 		this.queues.get(connection_id).push(cmd);
 	};
 
 	this.initQueue = function(connection_id) {
 		let queue = new Queue();
 		queue.on('push', () => {
-			console.log('Exec queue commands');
+			//console.log('Exec queue commands');
 			this.exec(connection_id);
 		});
-		console.log('New queue inited, id ' + connection_id);
+		//console.log('New queue inited, id ' + connection_id);
 		this.queues.set(connection_id, queue);
 	};
 
@@ -105,14 +104,14 @@ const AppServer = function() {
 		console.log('Queue emptiness: ' + queue.isEmpty());
 		while(!queue.isEmpty()) {
 			let command = queue.shift();
-			console.log('Command: ');
-			console.log(command);
+			//console.log('Command: ');
+			//console.log(command);
 			if(db_client[command.name] && typeof db_client[command.name] === 'function') {
-				console.log('Execute command', command);
+				//console.log('Execute command', command);
 				let result = await db_client[command.name].apply(db_client, command.params);
 				this.query_logger.add(db_client.last_query);
-				console.log('CALLBACK: ');
-				console.log(result);
+				//console.log('CALLBACK: ');
+				//console.log(result);
 				if(command.hasOwnProperty('callback')) {
 					command.callback(result);
 				}
