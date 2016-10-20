@@ -96,6 +96,11 @@ var Application = function() {
 				event.sender.send('set-databases', res);
 			});
 		});
+		ipc.on('custom-query', async (event, connection, params) => {
+			this.app_server.push(connection, 'execRawQuery', params, (res) => {
+				event.sender.send('custom-query-res', res);
+			});
+		});
 	};
 
 	this.init = function() {

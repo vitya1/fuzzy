@@ -9,7 +9,8 @@ export default {
 				structure: [],
 				data: []
 			},
-			databases: []
+			databases: [],
+			last_query: ''
 		}
 	},
 	ready: function() {
@@ -37,6 +38,15 @@ export default {
 			this.active_table.data = data.data;
 			this.active_table.structure = data.structure;
 		});
+		ipc.on('custom-query-res', (event, data, db_name) => {
+			this.active_table.data = data;
+			this.active_table.structure = [];
+			if(data.length > 0) {
+				for(let i in data[0]) {
+					this.active_table.structure.push({Field: i});
+				}
+			}
+		});
 	},
 	methods: {
 		chooseDb: function(index, event) {
@@ -46,6 +56,9 @@ export default {
 		chooseTable: function(index, event) {
 			this.active_table.name = index;
 			ipc.send('choose-table', this.id, [index]);
+		},
+		customQuery: function(event) {
+			ipc.send('custom-query', this.id, [this.last_query]);
 		}
 	}
 };

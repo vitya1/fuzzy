@@ -1,6 +1,5 @@
 <div class="row">
     <div class="col-sm-9">
-        menu
         <div class="row">
             <div class="col-xs-4">
                 <ul class="list-group">
@@ -20,6 +19,10 @@
                 </ul>
             </div>
             <div class="col-xs-8">
+                <div >
+                    <textarea v-model="last_query" class="form-control" rows="3" placeholder="Your query"></textarea>
+                    <button v-on:click="customQuery" type="submit" class="btn btn-default">Execute</button>
+                </div>
                 <table class="table" v-if="active_table.name != null">
                     <tr>
                         <th v-for="column in active_table.structure">
