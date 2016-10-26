@@ -27,7 +27,6 @@ class MysqlClient {
 	}
 
 	useDatabase(db_name) {
-		//@todo query logging
 		let query_str = `USE ${db_name};`;
 		return this.execRawQuery(query_str);
 	}

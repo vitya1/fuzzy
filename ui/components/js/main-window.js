@@ -10,7 +10,13 @@ export default {
 				data: []
 			},
 			databases: [],
-			last_query: ''
+			last_query: '',
+
+			log_live_time: 2000,
+			log_active: false,
+			log_message: '',
+			log_full_active: false,
+			log_full_messages: [],
 		}
 	},
 	ready: function() {
@@ -39,13 +45,29 @@ export default {
 			this.active_table.structure = data.structure;
 		});
 		ipc.on('custom-query-res', (event, data, db_name) => {
-			this.active_table.data = data;
-			this.active_table.structure = [];
+			this.active_table = {
+				name: 'empty',
+				data: data,
+				structure: []
+			};
 			if(data.length > 0) {
 				for(let i in data[0]) {
 					this.active_table.structure.push({Field: i});
 				}
 			}
+		});
+		ipc.on('log', (event, message) => {
+			console.log('New log event ' + message.text);
+			this.log_active = true;
+			this.log_message = message.text;
+			this.log_full_messages.push(message);
+			setTimeout(() => {
+				this.log_active = false;
+			}, this.log_live_time);
+		});
+		ipc.on('set-full-log', (event, message) => {
+			this.log_full_messages = message;
+			//@todo hide spinner
 		});
 	},
 	methods: {
@@ -59,6 +81,16 @@ export default {
 		},
 		customQuery: function(event) {
 			ipc.send('custom-query', this.id, [this.last_query]);
+		},
+		openLog: function(event) {
+			if(!this.log_full_active) {
+				ipc.send('get-full-log');
+				this.log_full_active = true;
+				//@todo show spinner
+			}
+			else {
+				this.log_full_active = false;
+			}
 		}
 	}
 };

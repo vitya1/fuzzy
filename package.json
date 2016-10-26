@@ -22,7 +22,6 @@
   },
   "dependencies": {
     "css-loader": "^0.25.0",
-    "electron-json-storage": "^2.0.0",
     "electron-prebuilt": "^1.2.7",
     "mysql": "^2.11.1",
     "node-uuid": "^1.4.7",

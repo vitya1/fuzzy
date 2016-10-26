@@ -2,7 +2,6 @@ require("babel-core/register");
 require("babel-polyfill");//todo remove
 
 const electron = require('electron');
-const storage  = require('electron-json-storage');
 
 import ConfigProvider from './build/config-provider.js';
 import AppServer from './build/app-server';
@@ -19,10 +18,12 @@ var Application = function() {
 	//@todo don't contain connection ids here
 	this.connection_id = null;
 	this.app_server = null;
+	this.webContents = null;
 
 	this.createMainWindow = function() {
 		mainWindow = new BrowserWindow({width: 800, height: 600});
 		mainWindow.loadURL(main_window_template);
+		this.webContents = mainWindow.webContents;
 		mainWindow.webContents.openDevTools();
 
 		mainWindow.on('closed', function () {
@@ -52,6 +53,10 @@ var Application = function() {
 		ipc.on('connect', async (event, data) => {
 			cp.saveSetting(data);
 			this.app_server = new AppServer();
+			this.app_server.query_logger.addCallback = (message) => {
+				console.log(message);
+				this.webContents.send('log', message);
+			};
 			var ssh_config = {};
 			var mysql_config = {};
 			//@todo refactor this. Looks pretty awful
@@ -100,6 +105,9 @@ var Application = function() {
 			this.app_server.push(connection, 'execRawQuery', params, (res) => {
 				event.sender.send('custom-query-res', res);
 			});
+		});
+		ipc.on('get-full-log', (event) => {
+			event.sender.send('set-full-log', this.app_server.query_logger.getFull());
 		});
 	};
 

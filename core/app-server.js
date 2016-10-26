@@ -1,39 +1,8 @@
 'use strict';
 
 import DatabaseManager from './database-manager';
-const EventEmitter = require('events');
-const util = require('util');
-
-const Queue = function () {
-	this.commands = [];
-
-	this.push = function(command) {
-		this.commands.push(command);
-		this.emit('push', command);
-	};
-
-	this.shift = function() {
-		this.emit('shift');
-		return this.commands.shift();
-	};
-
-	this.isEmpty = function() {
-		return this.commands.length == 0;
-	}
-};
-
-util.inherits(Queue, EventEmitter);
-
-const Logger = function() {
-	this.messages = [];
-
-	this.add = function(message) {
-		this.messages.push({
-			timestamp: Date.now(),
-			message: message
-		});
-	};
-};
+import Queue from './queue';
+import Logger from './logger';
 
 
 //while queue is not empty push new task to client
