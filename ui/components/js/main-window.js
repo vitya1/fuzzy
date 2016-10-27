@@ -9,10 +9,15 @@ export default {
 				structure: [],
 				data: []
 			},
+			active_row: null,
+			active_cell: null,
+			is_editable: false,
+			editing_row: null,
+			editing_cell: null,
 			databases: [],
 			last_query: '',
 
-			log_live_time: 2000,
+			log_live_time: 1500,
 			log_active: false,
 			log_message: '',
 			log_full_active: false,
@@ -43,6 +48,7 @@ export default {
 			console.log(data);
 			this.active_table.data = data.data;
 			this.active_table.structure = data.structure;
+			this.is_editable = true;
 		});
 		ipc.on('custom-query-res', (event, data, db_name) => {
 			this.active_table = {
@@ -55,6 +61,7 @@ export default {
 					this.active_table.structure.push({Field: i});
 				}
 			}
+			this.is_editable = false;
 		});
 		ipc.on('log', (event, message) => {
 			console.log('New log event ' + message.text);
@@ -82,7 +89,7 @@ export default {
 		customQuery: function(event) {
 			ipc.send('custom-query', this.id, [this.last_query]);
 		},
-		openLog: function(event) {
+		openLog: function() {
 			if(!this.log_full_active) {
 				ipc.send('get-full-log');
 				this.log_full_active = true;
@@ -90,6 +97,20 @@ export default {
 			}
 			else {
 				this.log_full_active = false;
+			}
+		},
+		editCell: function(index, row_number) {
+			if(this.is_editable) {
+ 				this.editing_cell = index;
+				this.editing_row = row_number;
+			}
+		},
+		chooseCell: function(index, row_number) {
+			this.active_cell = index;
+			if(this.editing_row != row_number || this.editing_cell != index) {
+				//@todo save edited data or save by button click?
+				this.editing_cell = null;
+				this.editing_row = null;
 			}
 		}
 	}

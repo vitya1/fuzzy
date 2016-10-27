@@ -21,7 +21,7 @@ var Application = function() {
 	this.webContents = null;
 
 	this.createMainWindow = function() {
-		mainWindow = new BrowserWindow({width: 800, height: 600});
+		mainWindow = new BrowserWindow({width: 800, height: 730});
 		mainWindow.loadURL(main_window_template);
 		this.webContents = mainWindow.webContents;
 		mainWindow.webContents.openDevTools();
